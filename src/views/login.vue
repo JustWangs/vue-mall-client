@@ -12,8 +12,19 @@
                 @click-right-icon="$toast('长度不超过10位')"
             />
 
+             <van-field
+                v-model="loginData.phone"
+                required
+                clearable
+                v-if="status === 'regist'"
+                label="手机号"
+                right-icon="question-o"
+                placeholder="请输入手机号"
+                @click-right-icon="$toast('长度不超过10位')"
+            />
+
             <van-field
-                v-model="loginData.passWord"
+                v-model="loginData.password"
                 type="password"
                 label="密码"
                 placeholder="请输入密码"
@@ -24,7 +35,7 @@
 
             <van-field
                 v-if="status === 'regist'"
-                v-model="loginData.passWordAgain"
+                v-model="loginData.passwordAgain"
                 type="password"
                 label="确认密码"
                 placeholder="请输入密码"
@@ -54,21 +65,20 @@
 </template>
 
 <script>
+    import { getCode, login, regist } from './../api/login'
     export default {
         data() {
             return {
                 status:'login',
                 loginData: {
                     userName: '',
-                    passWord: '',
+                    password: '',
                     code:'',
+                    phone:'',
+                    passwordAgain:''
                 },
                 titleName:'登录',
-                codeUrl:'//imgcps.jd.com/ling4/1431731/5am05bm85aW257KJ5LyY5ZOB/54ix5LmL54iG5qy-/p-5c1361ed82acdd181dd72168/87308cc5/cr_1125x445_0_171/s1125x690/q70.jpg',
-                registData: {
-                    userName: '',
-                    passWord: '',
-                }
+                codeUrl:'',
             }
         },
         created() {
@@ -76,13 +86,28 @@
         },
         methods: {
             onBack() {
+                if(this.titleName == '注册') {
+                    this.status = 'login'
+                    this.titleName = '登录'
+                    return
+                }
                 this.$router.go(-1)
             },
             onLogin() {
-
+                var {userName,password,code} = this.loginData
+                if(!userName || !password || !code) {
+                    this.$toast('请输入必填项')
+                    return
+                }
+                login(this.loginData).then(res=> {
+                    console.log(res)
+                })
             },
             getCodeImg() {
-
+                getCode().then(res=> {
+                    var src = 'data:image/jpg;base64,' + btoa(new Uint8Array(res).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+                    this.codeUrl = src
+                })
             },
             onRegist() {
                 if(this.status === 'login') {
@@ -97,16 +122,23 @@
                 }
 
                 // 执行注册
-                var {userName,passWord,passWordAgain} = this.loginData
-                if(!userName || !passWord) {
+                var {userName,phone,password,passwordAgain} = this.loginData
+                if(!userName || !password || !phone || !passwordAgain) {
                     this.$toast('请填写完整')
                     return
                 }
-                if(passWord != passWordAgain) {
+                if(password != passwordAgain) {
                     this.$toast('两次输入密码不一致,请重新输入')
                     return
                 }
-                console.log(userName,passWord)
+
+                regist(this.loginData).then(()=>{
+                    this.$toast('注册成功')
+                    setTimeout(()=> {
+                        this.status = 'login'
+                        this.titleName = '登录'
+                    },500)
+                })
             },
         },
     }

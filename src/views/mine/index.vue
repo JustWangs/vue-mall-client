@@ -3,7 +3,7 @@
         <img src="./../../../assets/image/mine@2x.png" class="backgroundImage">
         <div class="user_info">
             <img :src="userInfo.img" class="user_img">
-            <span class="user_name">{{userInfo.name}}</span>
+            <span class="user_name">{{userInfo.userName}}</span>
         </div>
         <div class="info_cell">
             <van-cell icon="bar-chart-o" title="我的订单" is-link/>
@@ -25,7 +25,7 @@ export default {
         }
     },
     created() {
-
+        
     },
 }
 </script>
