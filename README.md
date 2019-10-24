@@ -10,7 +10,7 @@
 
 ### 启动服务
 
-    yarn run serve
+    yarn run dev
 
 ### 构建生产环境
 
