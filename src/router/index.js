@@ -9,6 +9,7 @@ export const constRouter = [
   //  login
   {
     path: '/login',
+    name:'login',
     component: () => import('@/views/login'),
   },
   //  首页

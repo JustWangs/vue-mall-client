@@ -67,6 +67,7 @@
 <script>
     import { getCode, login, regist } from './../api/login'
     export default {
+        name:'login',
         data() {
             return {
                 status:'login',
@@ -82,6 +83,7 @@
             }
         },
         created() {
+            this.$db.clear()
             this.getCodeImg()
         },
         methods: {
@@ -100,7 +102,13 @@
                     return
                 }
                 login(this.loginData).then(res=> {
-                    console.log(res)
+                    for(let i in res.data) {
+                        if(i!='code' && i!='msg') {
+                            this.$db.save(i,res.data[i])
+                        }
+                    }
+                    this.$toast('登录成功')
+                    this.$router.go(-1)
                 })
             },
             getCodeImg() {

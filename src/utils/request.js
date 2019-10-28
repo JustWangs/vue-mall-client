@@ -1,9 +1,8 @@
 import axios from 'axios'
-import { Toast } from "vant";
-// import db from '@/utils/localstorage'
+import { Toast } from "vant"
 
 const service = axios.create({
-  baseURL: 'http://localhost:9999/h5',
+  baseURL:"http://localhost:9999/h5",
   withCredentials: true,
   timeout: 60 * 10 * 1000
 })

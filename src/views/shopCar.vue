@@ -56,7 +56,7 @@ export default {
     },
     watch: {
         checkedGoods: {
-            handler(newVal,oldVal) {
+            handler(newVal) {
                 this.totalPrice = 0
                 newVal.map(x=> {
                     this.totalPrice += parseFloat(x.price) * x.number
@@ -80,6 +80,7 @@ export default {
             console.log(this.checkedGoods)
         },
         onGoodsRadio(e) { // 单选
+            console.log(e)
             this.checkedGoods = []
             this.carGoods.forEach(x=> {
                 if(x.goodsRadio) { // 选中
@@ -94,6 +95,7 @@ export default {
             
         },
         clickAllGoods(e) { // 全选
+            console.log(e)
             Toast.loading({
                 message: '加载中...',
                 duration:500,

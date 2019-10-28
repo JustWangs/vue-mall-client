@@ -17,6 +17,7 @@ Vue.use(VueLazyload)
 fastclick.attach(document.body);
 
 Vue.prototype.$db = db
+
 Vue.prototype.util = util
 
 Vue.config.productionTip = false
