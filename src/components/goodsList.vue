@@ -19,8 +19,7 @@
         props:['goods','titleName'],
         methods:{
             getGoodsDetail(id) {
-                alert(id)
-                // todo...
+                this.$router.push({name:'goods',id:id})
             },
         }
     }

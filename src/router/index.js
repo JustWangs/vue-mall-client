@@ -48,6 +48,35 @@ export const constRouter = [
         showBottom:true
     }
   },
+  //  商品详情
+  {
+    path: '/goods',
+    name:'goods',
+    component: () => import('@/views/goods.vue'),
+    meta:{
+        showBottom:false
+    }
+  },
+  // 地址列表
+  {
+    path: '/address',
+    name:'address',
+    component: () => import('@/views/address/addressList.vue'),
+    meta:{
+        needLogin:true,
+        showBottom:false
+    }
+  },
+  // 编辑/新增地址
+  {
+    path:'/handleAddress',
+    name:'handleAddress',
+    component:()=> import('@/views/address/handleAddress.vue'),
+    meta:{
+      needLogin:true,
+      showBottom:false
+    }
+  }
 ]
 
 let router = new Router({

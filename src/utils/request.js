@@ -1,4 +1,5 @@
 import axios from 'axios'
+import db from '@/utils/localstorage'
 import { Toast } from "vant"
 
 const service = axios.create({
@@ -11,6 +12,9 @@ service.interceptors.request.use(
   config => {
     config.headers['Content-Type'] = 'application/json'
     config.headers['Accept'] = 'application/json'
+    if(db.get('Authorization')) {
+      config.headers['Authorization'] = db.get('Authorization')
+    }
     return config
   },
   error => {
@@ -24,7 +28,7 @@ service.interceptors.response.use(
     return res
   },
   error => {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 || error.response.status === 402) {
       Toast(error.response.data.data.msg)
     }
     return Promise.reject(error)

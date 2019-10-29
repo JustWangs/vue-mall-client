@@ -139,7 +139,6 @@
                     this.$toast('两次输入密码不一致,请重新输入')
                     return
                 }
-
                 regist(this.loginData).then(()=>{
                     this.$toast('注册成功')
                     setTimeout(()=> {

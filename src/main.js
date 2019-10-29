@@ -6,7 +6,6 @@ import fastclick from "fastclick"
 import VueLazyload from 'vue-lazyload'
 import db from './utils/localstorage'
 import { util } from './utils/util.js'
-
 import 'vant/lib/index.css';
 import  'amfe-flexible' // 适配
 
@@ -17,6 +16,7 @@ Vue.use(VueLazyload)
 fastclick.attach(document.body);
 
 Vue.prototype.$db = db
+import "./permission";
 
 Vue.prototype.util = util
 
