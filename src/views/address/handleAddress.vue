@@ -17,7 +17,7 @@
 
 <script>
 import areaList from "./../../assets/area.js";
-import { createAddress } from './../../api/address'
+import { createAddress, updateAddress, delAddress } from './../../api/address'
 export default {
   name:'handleAddress',
   data() {
@@ -43,12 +43,22 @@ export default {
           }
         })
       }else { // update
-        console.log(item)
-        console.log('更新')
+        item.address = item.province+item.city+item.county+item.addressDetail
+        updateAddress(item).then((res)=> {
+            if(res.data.code==200) {
+            this.$toast('修改成功')
+            this.$router.go(-1)
+          }
+        })
       }
     },
-    onDelete() {
-
+    onDelete(item) {
+      delAddress(item).then((res)=>{
+        if(res.data.code==200) {
+            this.$toast('删除成功')
+            this.$router.go(-1)
+        }
+      })
     },
     onBack() {
       this.$router.go(-1)

@@ -12,8 +12,26 @@ export function getAllAddress(data) {
 // 新增地址
 export function createAddress(data) {
     return request({
-      url: '/createAddress',
-      method: 'post',
-      data
+        url: '/createAddress',
+        method: 'post',
+        data
     })
-  }
+}
+
+// 编辑地址
+export function updateAddress(data) {
+    return request({
+        url: '/updateAddress',
+        method: 'post',
+        data
+    })
+}
+
+// 删除地址
+export function delAddress(data) {
+    return request({
+        url: '/delAddress',
+        method: 'post',
+        data
+    })
+}
