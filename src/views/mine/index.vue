@@ -32,7 +32,7 @@
             <img :src="userInfo.img" class="bigAva">
         </van-popup>
         <div class="info_cell">
-            <van-cell icon="bar-chart-o" title="我的订单" is-link/>
+            <van-cell icon="bar-chart-o" title="我的订单" @click="myOrder" is-link/>
             <van-cell icon="user-o" title="我的信息" is-link/>
             <van-cell icon="location-o" title="我的地址" @click="myAddress" is-link/>
         </div>
@@ -69,6 +69,9 @@ export default {
 
     },
     methods: {
+        myOrder() {
+            
+        },
         myAddress() {
             this.$router.push({name:'address'})
         },

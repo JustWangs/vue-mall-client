@@ -10,9 +10,9 @@
             <div class="goods_content_box" v-for="(item,index) in carGoods" :key="index">
                 <van-checkbox class="goods_radio" size="20px" v-model="item.goodsRadio" @change="onGoodsRadio(item)"></van-checkbox>
                 <div class="goods_detail_content">
-                    <img :src="item.url"  @click="onGoodsDetail(item.goodsId)">
+                    <van-image fit="cover" class="img" :src="item.cover" @click="onGoodsDetail(item.goodsId)" />
                     <div class="goods_txts" @click="onGoodsDetail(item.goodsId)">
-                        <p class="goods_name">{{item.goodsname}}</p>
+                        <p class="goods_name">{{item.goodsName}}</p>
                         <div class="goods_Op">
                             <van-icon size="20px" name="ellipsis" @click.stop="onCutCart(item)" />
                             <input type="number" :value="item.number" />
@@ -40,16 +40,15 @@
 
 <script>
 import { Toast } from 'vant';
+import { Dialog } from 'vant';
+import {goodsDetail, delCarGoods} from './../api/goods'
 export default { 
     data() {
         return {
             totalPrice:0,
             allChecked:false,
             editStatus:false,
-            carGoods:[
-                {goodsname:'aaabbbbaaabbbb',goodsRadio:false,price:100.12,number:1,goodsId:1,url:'//imgcps.jd.com/ling4/1431731/5am05bm85aW257KJ5LyY5ZOB/54ix5LmL54iG5qy-/p-5c1361ed82acdd181dd72168/87308cc5/cr_1125x445_0_171/s1125x690/q70.jpg'},
-                {goodsname:'aaa',goodsRadio:false,number:2,price:100.5,goodsId:2,url:'//imgcps.jd.com/ling4/1431731/5am05bm85aW257KJ5LyY5ZOB/54ix5LmL54iG5qy-/p-5c1361ed82acdd181dd72168/87308cc5/cr_1125x445_0_171/s1125x690/q70.jpg'},
-            ],
+            carGoods:[],
             checkedGoods:[],
             checkAll:false
         }
@@ -64,10 +63,24 @@ export default {
             },deep:true
         }
     },
+    mounted() {
+        this.getMyCollectionGoods()
+    },
     created() {
         this.initGoodsRadio()
     },
     methods: {
+        getMyCollectionGoods() {
+            this.$db.get('collectionGoods').map(x=> {
+                let goodsInfo = {}
+                goodsDetail({goodsId:x.goodsId}).then(res=> {
+                    goodsInfo = res.data.info
+                    goodsInfo.number = x.num
+                    goodsInfo.goodsRadio = false
+                    this.carGoods.push(goodsInfo)
+                })
+            })
+        },
         initGoodsRadio() {
             this.carGoods.map(x=> {
                 x.goodsRadio = false
@@ -116,8 +129,8 @@ export default {
                 }
             },500)
         },
-        onGoodsDetail() {
-
+        onGoodsDetail(id) {
+            this.$router.push({name:'goods',query:{goodsId:id}})
         },
         onAddCart(e) {
             e.number++
@@ -128,15 +141,23 @@ export default {
             }
         },
         deleteGoods(item,index) {
-            this.carGoods.splice(index,1)
-            var checkedGoodsIds = []
-            this.checkedGoods.map(x=> checkedGoodsIds.push(x.goodsId))
-            if(checkedGoodsIds.includes(item.goodsId)) { // 删除的在选中的里面
-                this.checkedGoods.splice(checkedGoodsIds.indexOf(item.goodsId),1)
-            }
-            // todo ...
-        },
-
+            var _index = index
+            Dialog.confirm({
+                title: '',
+                message: '您确认从购物车中移除吗？'
+            }).then(() => {
+                delCarGoods({userId:this.$db.get('userId'),goodsId:item.goodsId}).then(res=> {
+                    this.$db.save('collectionGoods',res.data.list.collectionGoods)
+                    this.$emit('getData',res.data.list.collectionGoods.length)
+                    this.carGoods.splice(_index,1)
+                    var checkedGoodsIds = []
+                    this.checkedGoods.map(x=> checkedGoodsIds.push(x.goodsId))
+                    if(checkedGoodsIds.includes(item.goodsId)) { // 删除的在选中的里面
+                        this.checkedGoods.splice(checkedGoodsIds.indexOf(item.goodsId),1)
+                    }
+                })
+            })
+        }
     }
 }
 </script>
@@ -166,7 +187,7 @@ export default {
                 }
                 .goods_detail_content {
                     width: 80%;
-                    & > img {
+                    .img {
                         margin-right: 10px;
                         width: 100px;
                         height: 100px;

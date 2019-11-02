@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-notice-bar text="通知内容" left-icon="volume-o" background="#F8D456"/>
+        <van-notice-bar :text="content" left-icon="volume-o" background="#F8D456"/>
         <van-swipe :autoplay="3000" class="bannerBox">
             <van-swipe-item v-for="(image, index) in bannerPic" :key="index">
                 <img :src="image.url" class="bannerImg" @click="getGoodsDetail(image.goodsId)"/>
@@ -11,7 +11,7 @@
 
 <script>
     export default {
-        props:['bannerPic'],
+        props:['bannerPic','content'],
         methods: {
             getGoodsDetail(id) {
                 console.log(id)

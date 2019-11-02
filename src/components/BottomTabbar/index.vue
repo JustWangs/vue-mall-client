@@ -12,10 +12,16 @@
 <script>
     export default {
         name:'BottomTabbar',
+        props:['changeCarNum'],
         data() {
             return {
                 active: 'home',
                 shopCarNum: 0,
+            }
+        },
+        watch:{
+            changeCarNum(){
+                this.shopCarNum = this.changeCarNum
             }
         },
         created() {
@@ -23,8 +29,8 @@
         },
         methods:{
             getshopCarNum() {
-                if(this.$db.get('shopCarNum')>0) {
-                    this.shopCarNum = this.$db.get('shopCarNum')
+                if(this.$db.get('collectionGoods').length>0) {
+                    this.shopCarNum = this.$db.get('collectionGoods').length
                 }
             },
             changeLink(e) {

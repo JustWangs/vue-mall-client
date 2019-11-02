@@ -30,6 +30,9 @@ service.interceptors.response.use(
   error => {
     if (error.response.status === 401 || error.response.status === 402) {
       Toast(error.response.data.data.msg)
+    }else if(error.response.status === 403){ // token过期
+      Toast(error.response.data.data.msg)
+      location.href = '#/login'
     }
     return Promise.reject(error)
   }

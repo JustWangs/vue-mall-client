@@ -1,25 +1,44 @@
 <template>
     <div class="goods">
         <van-divider class="goodsDivider">{{titleName}}</van-divider>
-        <div class="goodsBox">
+        <div class="goodsBox" v-show="goods.length>0">
             <div class="goodsContent" v-for="(item,index) in goods" :key="index" @click="getGoodsDetail(item.goodsId)">
-                <img :src="item.url" class="goodsImg">
+                <van-image fit="contain" :src="item.cover" class="goodsImg" />
                 <div class="goodsInfo">
-                    <div class="name">{{item.name}}</div>
+                    <div class="name">{{item.goodsName}}</div>
                     <div class="info">{{item.info}}</div>
-                    <div class="price">¥{{item.price}}</div>
+                    <div class="price">¥{{item.price}}
+                        <van-icon name="shopping-cart-o" class="addToCar" @click.stop="addToCar(item)"/>
+                    </div>
+                    
                 </div>
             </div>
+        </div>
+        <div v-show="goods.length<1">
+            <img src="./../../assets/image/noFind.png" class="nofind">
+            <p class="nofindFont">暂无商品</p>
         </div>
     </div>
 </template>
 
 <script>
+    import {addToCar} from './../api/goods'
     export default {
         props:['goods','titleName'],
+        data(){
+            return {
+                
+            }
+        },
         methods:{
             getGoodsDetail(id) {
-                this.$router.push({name:'goods',id:id})
+                this.$router.push({name:'goods',query:{goodsId:id}})
+            },
+            addToCar(e) {
+                addToCar({userId:this.$db.get('userId'),goodsId:e.goodsId}).then(res=> {
+                    this.$db.save('collectionGoods',res.data.list.collectionGoods)
+                    this.$emit('getData',res.data.list.collectionGoods.length)
+                })
             },
         }
     }
@@ -29,7 +48,10 @@
 .goods{
     background: #fff;
     padding: 0px 10px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
+    padding-bottom: 40px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     .goodsDivider{
         margin-top: 20px;
         padding-top: 15px;
@@ -66,8 +88,8 @@
                     height: 20px;
                     font-weight: bold;
                     color: #0E1924;
-                    white-space: nowrap;/*不换行*/
-                    text-overflow:ellipsis;/*超出部分省略号显示*/
+                    white-space: nowrap;
+                    text-overflow:ellipsis;
                 }
                 .info { 
                     font-size: 14px;
@@ -84,9 +106,25 @@
                     font-size:15px;
                     font-weight: bold;
                     color: #54C9E8;
+                    display: flex;
+                    justify-content:space-between;
+                    .addToCar{
+                        width: 20px;
+                        height: 20px;
+                        color: #ee0a24;
+                    }
                 }
             }
         }
+    }
+    .nofind{
+        width: 100%;
+    }
+    .nofindFont{
+        text-align: center;
+        font-size: 14px;
+        color: #6C7B8A;
+        padding-bottom: 40px;
     }
 }
 </style>
